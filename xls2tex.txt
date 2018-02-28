@@ -1,0 +1,57 @@
+Sub textablebutton()
+Dim tex As String
+Dim r As range
+Set r = Selection
+
+Dim x As Integer
+Dim y As Integer
+x = r.Rows.Count
+y = r.Columns.Count
+
+Dim i As Integer
+Dim j As Integer
+
+tex = "\begin{table}[h]" & vbLf _
+    & "\centering" & vbLf _
+    & "\caption{table caption}" & vbLf _
+    & "\resizebox{.5\textwidth}{!}{" & vbLf _
+    & "\begin{tabular}{"
+For j = 1 To y - 1
+    tex = tex & "l|"
+Next j
+tex = tex & "l}" _
+    & vbLf & vbTab & "\hline" _
+    & vbLf
+For j = 1 To y - 1
+    tex = tex & vbTab & r.Cells(1, j) & vbTab & "&"
+Next j
+tex = tex & vbTab & r.Cells(1, y) & vbTab & "//" _
+    & vbLf & vbTab & "\hline"
+
+
+For i = 2 To x
+    tex = tex & vbLf & vbTab
+    For j = 1 To y - 1
+        tex = tex & r.Cells(i, j) & vbTab & "&" & vbTab
+    Next j
+    tex = tex & r.Cells(i, y) & vbTab & "//"
+Next i
+
+tex = tex & vbLf _
+    & vbTab & "\hline" & vbLf _
+    & "\end{tabular}}" & vbLf _
+    & "\label{tab:1}\cite{} explanation of the table." & vbLf _
+    & "\end{table}"
+
+' vbCr = Char(13) = CR (Carriage-return character). Used by Mac OS and Apply II family
+' vbLf = Char(10) = LF (line-feed character). Used by Linux and Mac OS X
+' vbCrLf = Char(13) + Char(10). CR LF (carriage-return followed by line-feed) Used by Windows
+' vbNewLine = the same as vbCrLf
+' vbTab
+
+' Msgbox 1024 Character Limit
+x = Int(Len(tex) / 1000) - ((Len(tex) / 1000) > 0) ' ceiling, true = -1
+For i = 0 To x - 1
+    MsgBox Mid(tex, 1000 * i + 1, 1000)
+Next i
+End Sub
